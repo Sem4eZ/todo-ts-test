@@ -12,7 +12,7 @@ type TodosState = {
 
 const savedTodos = localStorage.getItem("todos");
 const initialState: TodosState = savedTodos
-  ? JSON.parse(savedTodos)
+  ? { list: JSON.parse(savedTodos) }
   : {
       list: [],
     };
