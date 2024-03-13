@@ -8,10 +8,17 @@ import { addTodo } from "./store/todoSlice";
 function App() {
   const dispatch = useAppDispatch();
   const [text, setText] = useState<string>("");
+
   const handleAction = () => {
     if (text.trim().length) {
       dispatch(addTodo(text));
       setText("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAction();
     }
   };
 
@@ -21,6 +28,7 @@ function App() {
         value={text}
         updateText={setText}
         handleAction={handleAction}
+        handleKeyDown={handleKeyDown}
       />
       <TodoList />
     </>

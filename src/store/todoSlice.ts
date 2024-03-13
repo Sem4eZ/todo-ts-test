@@ -10,9 +10,12 @@ type TodosState = {
   list: Todo[];
 };
 
-const initialState: TodosState = {
-  list: [],
-};
+const savedTodos = localStorage.getItem("todos");
+const initialState: TodosState = savedTodos
+  ? JSON.parse(savedTodos)
+  : {
+      list: [],
+    };
 
 const todoSlice = createSlice({
   name: "todo",
@@ -24,16 +27,21 @@ const todoSlice = createSlice({
         title: action.payload,
         completed: false,
       });
+      localStorage.setItem("todos", JSON.stringify(state));
     },
     toggleComplete(state, action: PayloadAction<string>) {
       const toggledTodo = state.list.find((todo) => todo.id === action.payload);
-
       if (toggledTodo) {
         toggledTodo.completed = !toggledTodo.completed;
       }
+      state.list.sort((a, b) =>
+        a.completed === b.completed ? 0 : a.completed ? 1 : -1
+      );
+      localStorage.setItem("todos", JSON.stringify(state));
     },
     removeTodo(state, action: PayloadAction<string>) {
-      state.list.filter((todo) => todo.id !== action.payload);
+      state.list = state.list.filter((todo) => todo.id !== action.payload);
+      localStorage.setItem("todos", JSON.stringify(state));
     },
   },
 });
